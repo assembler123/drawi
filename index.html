@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA==" crossorigin="anonymous" />
+    <title>Document</title>
+</head>
+<body>
+    <div class="color-plt">
+        <h3>Color</h3>
+        <button class='red' onclick="changeColor('red')"></button>
+        <button class='blue' onclick="changeColor('blue')"></button>
+        <button class='green' onclick="changeColor('green')"></button>
+        <button class='yellow' onclick="changeColor('yellow')"></button>
+        <button class='eraser' onclick="changeColor('#fff')"><i class="fas fa-eraser"></i></button>
+        <input type="range" min="1" max="70" value="21" onchange="slider()" class="slider" id="myRange">
+        <input type="color" value="#ff0000" oninput="colorchange()" class="clr" id="clor">
+        
+        
+    </div>
+    <div class='outer' id='canv'>
+        <canvas id='drw'></canvas>
+      </div>
+</body>
+</html>
+<style>
+    *{
+        font-family:helvetica;
+    }
+    .color-plt{
+        position: absolute;
+        top:0px;
+        background: #fff;
+        padding:10px
+    }
+    .red,.blue,.green,.yellow,.eraser
+    {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: none;
+        background: red;
+    }
+    .eraser
+    {
+        background: none;
+        font-size:36px;
+        width: unset;
+        height: unset;
+    }
+    .blue
+    {
+        background: blue;   
+    }
+    .green
+    {
+        background: green;
+    }
+    .yellow
+    {
+        background: yellow;
+    }
+</style>
+<script>
+    const cnv = document.getElementById('drw');
+    const ctx = cnv.getContext('2d')
+    let color = 'red';
+    let p = 21;
+    function changeColor(e)
+    {
+        color = e;
+    }
+    const slider = (e) => {
+        // alert(e)
+        console.log(this,e)
+        p=parseInt(document.getElementById('myRange').value)
+        // p = e.target.value;
+    }
+// ctx.fillRect(50,50,200,200);
+cnv.height = window.innerHeight;
+cnv.width = window.innerWidth;
+
+let running = false;
+const fromPoint = (e) => {
+  running = true;
+  draw(e);
+  
+}
+const toPoint = () => {
+  running = false;
+  ctx.beginPath();
+}
+const draw = (e)=> {
+  if(!running)
+    return;
+  ctx.lineWidth = p;
+  ctx.lineCap = "square";
+  ctx.strokeStyle= color;
+  ctx.lineTo(e.clientX,e.clientY);
+  ctx.stroke();
+  ctx.beginPath();
+}
+const colorchange = () => {
+    color = document.getElementById('clor').value;
+}
+window.addEventListener("mousedown",fromPoint);
+window.addEventListener("mouseup",toPoint);
+window.addEventListener("mousemove",draw);
+
+window.addEventListener('resize',()=>{
+  cnv.height = window.innerHeight;
+// cnv.width = window.innerWidth;
+})
+</script>
